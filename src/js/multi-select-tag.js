@@ -3,10 +3,11 @@
 
 
 function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
-    var element = null
+    var element = el
     var options = null
     var customSelectContainer = null
     var wrapper = null
+    var results = null
     var btnContainer = null
     var body = null
     var inputContainer = null
@@ -20,7 +21,6 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     init()
 
     function init() {
-        element = document.getElementById(el)
         createElements()
         initOptions()
         enableItemSelection()
@@ -48,10 +48,10 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
                 removeTag(child.dataset.value)
                 setValues()
             }
-            
+
         })
-        
-        window.addEventListener('click', (e) => {   
+
+        window.addEventListener('click', (e) => {
             if (!customSelectContainer.contains(e.target)){
                 drawer.classList.add('hidden')
             }
@@ -63,7 +63,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         // Create custom elements
         options = getOptions();
         element.classList.add('hidden')
-        
+
         // .multi-select-tag
         customSelectContainer = document.createElement('div')
         customSelectContainer.classList.add('mult-select-tag')
@@ -81,7 +81,10 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         if(customs.rounded) {
             body.classList.add('rounded')
         }
-        
+        //results container
+        results = document.createElement('div')
+        results.classList.add('selectedItems-container')
+
         // .input-container
         inputContainer = document.createElement('div')
         inputContainer.classList.add('input-container')
@@ -112,6 +115,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
 
         body.append(btnContainer)
+        wrapper.append(results)
         wrapper.append(body)
 
         drawer = document.createElement('div');
@@ -124,9 +128,9 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
         }
         drawer.append(inputBody)
         ul = document.createElement('ul');
-        
+
         drawer.appendChild(ul)
-    
+
         customSelectContainer.appendChild(wrapper)
         customSelectContainer.appendChild(drawer)
 
@@ -149,7 +153,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
                 const li = document.createElement('li')
                 li.innerHTML = option.label
                 li.dataset.value = option.value
-                
+
                 // For search
                 if(val && option.label.toLowerCase().startsWith(val.toLowerCase())) {
                     ul.appendChild(li)
@@ -164,20 +168,16 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     function createTag(option) {
         // Create and show selected item as tag
         const itemDiv = document.createElement('div');
-        itemDiv.classList.add('item-container');
-        itemDiv.style.color = tagColor.textColor || '#2c7a7b'
-        itemDiv.style.borderColor = tagColor.borderColor || '#81e6d9'
-        itemDiv.style.background = tagColor.bgColor || '#e6fffa'
+        itemDiv.classList.add('item-container', 't-multiSelect-item');
         const itemLabel = document.createElement('div');
-        itemLabel.classList.add('item-label');
-        itemLabel.style.color = tagColor.textColor || '#2c7a7b'
+        itemLabel.classList.add('item-label', 't-multiSelect-label');
         itemLabel.innerHTML = option.label
-        itemLabel.dataset.value = option.value 
+        itemLabel.dataset.value = option.value
         const itemClose = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item-close-svg">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>`, 'image/svg+xml').documentElement
- 
+        itemClose.classList.add('t-multiSelect-close');
         itemClose.addEventListener('click', (e) => {
             const unselectOption = options.find((op) => op.value == option.value)
             unselectOption.selected = false
@@ -185,10 +185,10 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
             initOptions()
             setValues()
         })
-    
+
         itemDiv.appendChild(itemLabel)
         itemDiv.appendChild(itemClose)
-        inputContainer.append(itemDiv)
+        results.append(itemDiv)
     }
 
     function enableItemSelection() {
@@ -206,7 +206,7 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
 
     function isTagSelected(val) {
         // If the item is already selected
-        for(var child of inputContainer.children) {
+        for(var child of results.children) {
             if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
                 return true
             }
@@ -215,9 +215,9 @@ function MultiSelectTag (el, customs = {shadow: false, rounded:true}) {
     }
     function removeTag(val) {
         // Remove selected item
-        for(var child of inputContainer.children) {
+        for(var child of results.children) {
             if(!child.classList.contains('input-body') && child.firstChild.dataset.value == val) {
-                inputContainer.removeChild(child)
+                results.removeChild(child)
             }
         }
     }
