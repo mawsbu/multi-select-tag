@@ -33,5 +33,6 @@
   "homepage": "https://github.com/habibmhamadi/multi-select-tag#readme",
   "dependencies": {
     "minify": "^9.1.0"
-  }
+  },
+  "main": "index.js"
 }

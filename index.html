@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="src/js/multi-select-tag.js"></script>
+    <link rel="stylesheet" href="src/css/multi-select-tag.css">
+    <title></title>
+  </head>
+  <body>
+    <style media="screen">
+      .test{
+        width: 600px;
+        height: 400px;
+        margin: 50px auto;
+        border: 1px solid grey;
+        padding: 50px;
+      }
+    </style>
+    <div class="test">
+      <select name="countries" id="countries" class="js-multiSelect-combo" multiple>
+          <option value="1">Lorem ipsum dolor sit amet consectetur adipisicing elit</option>
+          <option value="2">tenetur iure eius earum ut</option>
+          <option value="3">adipisci amet laborum. Perspiciatis</option>
+          <option value="4">Impedit sit sunt quaerat, odit,tenetur error, harum nesciunt</option>
+          <option value="5">Afghanistan</option>
+          <option value="6">Australia</option>
+          <option value="7">Germany</option>
+          <option value="8">Canada</option>
+          <option value="9">Russia</option>
+      </select>
+
+    </div>
+
+    <script>
+      let multiSelArray = document.querySelectorAll(".js-multiSelect-combo");
+
+      multiSelArray.forEach(initMultiSelectCombo);
+
+      function initMultiSelectCombo(obj){
+        console.log(obj);
+
+        new MultiSelectTag(obj)
+      }
+
+    </script>
+  </body>
+</html>
